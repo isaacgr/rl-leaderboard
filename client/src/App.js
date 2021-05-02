@@ -6,9 +6,8 @@ import Players from "./components/Players";
 import "./App.css";
 
 const client = new ApolloClient({
-  uri: "http://localhost:5000/graphql",
-  cache: new InMemoryCache(),
-  notifyOnNetworkStatusChange: true
+  uri: "http://localhost:5000/graphql/",
+  cache: new InMemoryCache()
 });
 
 export class App extends Component {

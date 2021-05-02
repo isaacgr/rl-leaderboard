@@ -6,6 +6,7 @@ const PLAYER_QUERY = gql`
     player(id: $id) {
       platformInfo {
         platformUserHandle
+        avatarUrl
       }
       overview {
         wins {
@@ -49,8 +50,8 @@ const Player = ({ playerId }) => {
             <div className="col-md-9">
               <img
                 alt="img"
-                src={data.player.avatarUrl}
-                style={{ width: 200, display: "block", margin: "auto" }}
+                src={data.player.platformInfo.avatarUrl}
+                style={{ width: 100, display: "block" }}
               />
               <h4>Player: {data.player.platformInfo.platformUserHandle}</h4>
               <p>Wins: {data.player.overview.wins.value}</p>
