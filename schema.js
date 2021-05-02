@@ -9,13 +9,6 @@ const {
 
 const axios = require("axios");
 
-// const DataType = new GraphQLObjectType({
-//   name: 'Data',
-//   fields: () => ({
-//     data: {type: PlayerType}
-//   })
-// })
-
 const PlayerType = new GraphQLObjectType({
   name: "Player",
   fields: () => ({
@@ -28,7 +21,8 @@ const PlatformInfoType = new GraphQLObjectType({
   fields: () => ({
     platformUserHandle: {
       type: GraphQLString
-    }
+    },
+    avatarUrl: { type: GraphQLString }
   })
 });
 
@@ -46,9 +40,7 @@ const RootQuery = new GraphQLObjectType({
             `https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/${args.id}`,
             { withCredentials: true }
           )
-          .then((res) => {
-            res.data;
-          });
+          .then((res) => res.data.data);
       }
     }
   }
