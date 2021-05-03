@@ -1,0 +1,133 @@
+/*
+ ===============================
+ Custom Syles
+ ===============================
+ */
+
+html,
+body {
+  background: #ecf0f1;
+  margin: 0;
+  height: 100%;
+}
+
+.container {
+  width: 90%;
+  height: auto;
+  margin: 1rem auto;
+  padding-bottom: 1rem;
+}
+
+a {
+  text-decoration: none;
+  width: 50%;
+}
+
+a:focus {
+  text-decoration: none;
+  width: 50%;
+}
+
+.content-block {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.content-block--flex {
+  display: flex;
+  justify-content: center;
+}
+
+.content-block--flex > * {
+  margin: 0 1rem;
+}
+
+/*
+===============================
+Title
+===============================
+*/
+
+.title {
+  color: #95a5a6;
+  text-align: center;
+  font: 300 40px "Lato", "Open Sans", "Helvetica Nue", sans-serif;
+  letter-spacing: 1px;
+  text-transform: capitalize;
+  height: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.sub-title {
+  color: #95a5a6;
+  text-align: center;
+  font: 300 15px "Lato", "Open Sans", "Helvetica Nue", sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: auto 0;
+}
+
+/*
+ ===============================
+ Player Syles
+ ===============================
+ */
+
+.player-header {
+  display: flex;
+  justify-content: space-around;
+}
+
+.player-header--content {
+  display: flex;
+}
+
+.player-header__name {
+  padding-left: 1rem;
+  color: #95a5a6;
+  font: 300 15px "Lato", "Open Sans", "Helvetica Nue", sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: auto 0;
+}
+
+.playlist-stats {
+  display: flex;
+  flex-direction: column;
+  width: 33%;
+}
+
+.playlist-stats--overview {
+  flex-basis: 100%;
+  margin-bottom: 1rem;
+}
+
+.player-stats {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+/*
+===============================
+Stats table
+===============================
+*/
+
+.stats__table,
+.stats__table tr {
+  border: 1px solid #95a5a6;
+}
+
+.stats__table {
+  text-align: left;
+  margin: 0 auto;
+  color: #3498db;
+  font: 300 15px "Lato", "Open Sans", "Helvetica Nue", sans-serif;
+  letter-spacing: 2px;
+}
+
+.stats__table td {
+  padding: 0.1rem 1rem;
+}

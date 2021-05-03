@@ -3,6 +3,7 @@ const {
   GraphQLString,
   GraphQLList,
   GraphQLSchema,
+  GraphQLFloat,
   GraphQLInt
 } = require("graphql");
 
@@ -47,7 +48,9 @@ const OverviewType = new GraphQLObjectType({
     },
     assists: {
       type: PerformanceType
-    }
+    },
+    goalShotRatio: { type: PerformanceType },
+    seasonRewardLevel: { type: PerformanceType }
   })
 });
 
@@ -99,7 +102,16 @@ const PerformanceType = new GraphQLObjectType({
   fields: () => ({
     percentile: { type: GraphQLString },
     displayName: { type: GraphQLString },
-    value: { type: GraphQLInt }
+    value: { type: GraphQLFloat },
+    metadata: { type: SeasonRewardsMetadata }
+  })
+});
+
+const SeasonRewardsMetadata = new GraphQLObjectType({
+  name: "SeasonRewardsMetadata",
+  fields: () => ({
+    rankName: { type: GraphQLString },
+    iconUrl: { type: GraphQLString }
   })
 });
 

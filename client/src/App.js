@@ -3,6 +3,7 @@ import { ApolloProvider } from "@apollo/client/react";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Players from "./components/Players";
+import logo from "./logo.png";
 import "./App.css";
 
 const client = new ApolloClient({
@@ -16,11 +17,7 @@ export class App extends Component {
       <ApolloProvider client={client}>
         <Router>
           <div className="container">
-            {/* <img
-              src={logo}
-              alt="SpaceX"
-              style={{ width: 200, display: "block", margin: "auto" }}
-            /> */}
+            <h1 className="title">Ball Buddies Leaderboard</h1>
             <Route exact path="/" component={Players}></Route>
           </div>
         </Router>
