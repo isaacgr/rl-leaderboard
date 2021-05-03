@@ -1,5 +1,6 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Player from "./Player";
+
 
 const ballBuddies = [
   "76561197995010826",
@@ -7,16 +8,15 @@ const ballBuddies = [
   "76561197996271106"
 ];
 
-export class Players extends Component {
-  render() {
+const Players = () => {
     return (
       <div>
         {ballBuddies.map((id) => {
-          return <Player key={id} playerId={id} />;
+          return <Player key={id} playerId={id}/>;
         })}
       </div>
     );
-  }
+  
 }
 
 export default Players;

@@ -14,6 +14,7 @@ const PlayerType = new GraphQLObjectType({
   fields: () => ({
     platformInfo: { type: PlatformInfoType },
     segments: { type: SegmentList },
+    availableSegments: { type: SegmentList },
     overview: {
       type: OverviewType,
       resolve(parent, args) {
@@ -71,9 +72,17 @@ const SegmentsType = new GraphQLObjectType({
       type: GraphQLString
     },
     metadata: { type: MetaDataType },
+    attributes: { type: AttributesType },
     stats: {
       type: StatsType
     }
+  })
+});
+
+const AttributesType = new GraphQLObjectType({
+  name: "Attributes",
+  fields: () => ({
+    season: { type: GraphQLInt }
   })
 });
 
@@ -134,6 +143,21 @@ const RootQuery = new GraphQLObjectType({
         return axios
           .get(
             `https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/${args.id}`,
+            { withCredentials: true }
+          )
+          .then((res) => res.data.data);
+      }
+    },
+    segments: {
+      type: SegmentList,
+      args: {
+        id: { type: GraphQLString },
+        season: { type: GraphQLInt }
+      },
+      resolve(parent, args) {
+        return axios
+          .get(
+            `https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/${args.id}/segments/playlist?season=${args.season}`,
             { withCredentials: true }
           )
           .then((res) => res.data.data);

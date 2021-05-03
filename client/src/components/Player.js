@@ -1,5 +1,6 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { useQuery, gql } from "@apollo/client";
+import Segments from "./Segments";
 
 const PLAYER_QUERY = gql`
   query PlayerQuery($id: String!) {
@@ -8,31 +9,12 @@ const PLAYER_QUERY = gql`
         platformUserHandle
         avatarUrl
       }
-      segments {
-        type
+      availableSegments {
         metadata {
           name
         }
-        stats {
-          tier {
-            metadata {
-              name
-            }
-          }
-          division {
-            metadata {
-              name
-            }
-          }
-          matchesPlayed {
-            value
-          }
-          winStreak {
-            value
-          }
-          rating {
-            value
-          }
+        attributes {
+          season
         }
       }
       overview {
@@ -75,21 +57,26 @@ const PLAYER_QUERY = gql`
   }
 `;
 
-const validPlaylists = [
-  "Ranked Duel 1v1",
-  "Ranked Doubles 2v2",
-  "Ranked Standard 3v3"
-];
-
 const Player = ({ playerId }) => {
+  const [season, setSeason] = useState(17);
+  console.log(season);
   const { loading, error, data, refetch } = useQuery(PLAYER_QUERY, {
     variables: { id: playerId },
     fetchPolicy: "no-cache"
   });
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <h2 className="sub-title">Loading...</h2>;
   if (error) {
     console.log(error);
-    return <p>Error :(</p>;
+    return (
+      <h2 className="sub-title" id="error">{`Error: ${error.message}`}</h2>
+    );
+  }
+  if (data.length === 0) {
+    return (
+      <h2 className="sub-title" id="error">
+        No data
+      </h2>
+    );
   }
   return (
     <div>
@@ -100,7 +87,7 @@ const Player = ({ playerId }) => {
               <img
                 alt="img"
                 src={data.player.platformInfo.avatarUrl}
-                style={{ width: 50, display: "block" }}
+                style={{ width: 100, display: "block" }}
               />
               <h4 className="player-header__name">
                 {data.player.platformInfo.platformUserHandle}
@@ -113,8 +100,28 @@ const Player = ({ playerId }) => {
               <img
                 alt="img"
                 src={data.player.overview.seasonRewardLevel.metadata.iconUrl}
-                style={{ width: 50, display: "block" }}
+                style={{ width: 100, display: "block" }}
               />
+            </div>
+            <div className="player-header--content">
+              <div className="dropdown">
+                <h3 className="sub-title">Pattern Selection</h3>
+                <select
+                  value={season}
+                  onChange={(e) => setSeason(e.target.value)}
+                >
+                  {data.player.availableSegments.map((segment) => {
+                    return (
+                      <option
+                        key={segment.attributes.season}
+                        value={segment.attributes.season}
+                      >
+                        {segment.metadata.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
             </div>
           </div>
           <div className="player-stats">
@@ -130,51 +137,21 @@ const Player = ({ playerId }) => {
                   })
                   .map((stat) => {
                     return (
-                      <tr>
-                        <td>
-                          {data.player.overview[stat].displayName.toUpperCase()}
-                        </td>
-                        <td>{data.player.overview[stat].value}</td>
-                      </tr>
+                      <tbody key={data.player.overview[stat].value}>
+                        <tr>
+                          <td>
+                            {data.player.overview[
+                              stat
+                            ].displayName.toUpperCase()}
+                          </td>
+                          <td>{data.player.overview[stat].value}</td>
+                        </tr>
+                      </tbody>
                     );
                   })}
               </table>
             </div>
-            {data.player.segments
-              .filter((playlist) => {
-                const name = playlist.metadata.name;
-                if (validPlaylists.includes(name)) {
-                  return true;
-                }
-              })
-              .map((playlist) => {
-                return (
-                  <div className="playlist-stats">
-                    <h3 className="sub-title">{playlist.metadata.name}</h3>
-                    <table className="stats__table">
-                      {Object.keys(playlist.stats)
-                        .filter((stat) => {
-                          if (stat === "__typename") {
-                            return false;
-                          }
-                          return true;
-                        })
-                        .map((stat) => {
-                          return (
-                            <tr>
-                              <td>{stat.toUpperCase()}</td>
-                              <td>
-                                {playlist.stats[stat].metadata
-                                  ? playlist.stats[stat].metadata.name
-                                  : playlist.stats[stat].value}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                    </table>
-                  </div>
-                );
-              })}
+            <Segments playerId={playerId} season={season} />
           </div>
         </div>
       </Fragment>
