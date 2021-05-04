@@ -40,7 +40,7 @@ const validPlaylists = [
 ];
 
 const Segments = ({ playerId, season }) => {
-  const { loading, error, data, refetch } = useQuery(SEGMENTS_QUERY, {
+  const { loading, error, data } = useQuery(SEGMENTS_QUERY, {
     variables: { id: playerId, season: parseInt(season) },
     fetchPolicy: "no-cache"
   });
@@ -66,6 +66,7 @@ const Segments = ({ playerId, season }) => {
           if (validPlaylists.includes(name)) {
             return true;
           }
+          return false;
         })
         .map((playlist) => {
           return (

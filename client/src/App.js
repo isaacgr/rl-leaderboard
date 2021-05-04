@@ -6,7 +6,7 @@ import Players from "./components/Players";
 import "./App.css";
 
 const client = new ApolloClient({
-  uri: "http://localhost:5000/graphql/",
+  uri: "/graphql",
   cache: new InMemoryCache()
 });
 
@@ -21,6 +21,6 @@ const App = () => {
       </Router>
     </ApolloProvider>
   );
-}
+};
 
 export default App;

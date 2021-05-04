@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Player from "./Player";
 
-
 const ballBuddies = [
   "76561197995010826",
   "76561198016163269",
@@ -9,14 +8,13 @@ const ballBuddies = [
 ];
 
 const Players = () => {
-    return (
-      <div>
-        {ballBuddies.map((id) => {
-          return <Player key={id} playerId={id}/>;
-        })}
-      </div>
-    );
-  
-}
+  return (
+    <div className="players-list">
+      {ballBuddies.map((id) => {
+        return <Player key={id} playerId={id} />;
+      })}
+    </div>
+  );
+};
 
 export default Players;

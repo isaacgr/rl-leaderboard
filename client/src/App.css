@@ -6,13 +6,15 @@
 
 html,
 body {
-  background: #ecf0f1;
+  background-image: linear-gradient(#062c7f, #7fb0ff);
   margin: 0;
   height: 100%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .container {
-  width: 90%;
+  width: 95%;
   height: auto;
   margin: 1rem auto;
   padding-bottom: 1rem;
@@ -49,9 +51,10 @@ Title
 */
 
 .title {
-  color: #95a5a6;
+  color: #f3f4f7;
   text-align: center;
   font: 300 40px "Lato", "Open Sans", "Helvetica Nue", sans-serif;
+  font-weight: bold;
   letter-spacing: 1px;
   text-transform: capitalize;
   height: auto;
@@ -74,8 +77,14 @@ Card
 ===============================
 */
 
-.card{
-  /* background-color: #8395a7; */
+.card {
+  background-color: #f3f4f7;
+  margin: 0 1rem;
+}
+
+.card-header {
+  flex-wrap: wrap;
+  background-image: linear-gradient(#fc540c, #fc9c0c);
 }
 
 /*
@@ -83,6 +92,20 @@ Card
  Player Syles
  ===============================
  */
+
+.players-list {
+  display: flex;
+  /* flex-wrap: wrap; */
+}
+
+@media (max-width: 1210px) {
+  .players-list {
+    flex-wrap: wrap;
+  }
+  .card {
+    margin: 0;
+  }
+}
 
 .player-header {
   display: flex;
@@ -95,8 +118,9 @@ Card
 
 .player-header__name {
   padding-left: 1rem;
-  color: #95a5a6;
+  color: #000000;
   font: 300 15px "Lato", "Open Sans", "Helvetica Nue", sans-serif;
+  font-weight: bold;
   letter-spacing: 2px;
   text-transform: uppercase;
   margin: auto 0;
@@ -128,7 +152,7 @@ Stats table
 
 .stats__table,
 .stats__table tr {
-  border: 1px solid #95a5a6;
+  border: 1px solid #000000;
 }
 
 .stats__table {
@@ -141,6 +165,16 @@ Stats table
 
 .stats__table td {
   padding: 0.1rem 1rem;
+}
+
+/*
+===============================
+Selector
+===============================
+*/
+
+.season-select {
+  margin-top: 0.5rem;
 }
 
 /*
