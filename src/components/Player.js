@@ -19,6 +19,34 @@ const PLAYER_QUERY = gql`
         }
       }
       overview {
+        wins {
+          value
+          displayName
+        }
+        goals {
+          value
+          displayName
+        }
+        saves {
+          value
+          displayName
+        }
+        assists {
+          value
+          displayName
+        }
+        mVPs {
+          value
+          displayName
+        }
+        shots {
+          value
+          displayName
+        }
+        goalShotRatio {
+          value
+          displayName
+        }
         seasonRewardLevel {
           metadata {
             rankName
@@ -98,7 +126,7 @@ const Player = ({ playerId }) => {
           </div>
         </div>
         <div className="player-stats">
-          <Overview playerId={playerId} />
+          <Overview playerId={playerId} data={data.player.overview} />
           <Segments playerId={playerId} season={season} />
         </div>
       </div>
