@@ -85,7 +85,7 @@ const Player = ({ playerId }) => {
             <img
               alt="img"
               src={data.player.platformInfo.avatarUrl}
-              style={{ width: 100, display: "block" }}
+              style={{ height: 100, width: 100, display: "block" }}
             />
             <h4 className="player-header__name">
               {data.player.platformInfo.platformUserHandle}
@@ -95,7 +95,7 @@ const Player = ({ playerId }) => {
             <img
               alt="img"
               src={data.player.overview.seasonRewardLevel.metadata.iconUrl}
-              style={{ width: 100, display: "block" }}
+              style={{ height: 100, width: 100, display: "block" }}
             />
             <h3 className="player-header__name">
               {data.player.overview.seasonRewardLevel.metadata.rankName} Rewards
