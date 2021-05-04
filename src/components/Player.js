@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import Segments from "./Segments";
+import Overview from "./Overview";
 
 const PLAYER_QUERY = gql`
   query PlayerQuery($id: String!) {
@@ -18,34 +19,6 @@ const PLAYER_QUERY = gql`
         }
       }
       overview {
-        wins {
-          value
-          displayName
-        }
-        goals {
-          value
-          displayName
-        }
-        saves {
-          value
-          displayName
-        }
-        assists {
-          value
-          displayName
-        }
-        mVPs {
-          value
-          displayName
-        }
-        shots {
-          value
-          displayName
-        }
-        goalShotRatio {
-          value
-          displayName
-        }
         seasonRewardLevel {
           metadata {
             rankName
@@ -125,30 +98,7 @@ const Player = ({ playerId }) => {
           </div>
         </div>
         <div className="player-stats">
-          <div className="playlist-stats--overview">
-            <h3 className="sub-title">Overview</h3>
-            <table className="stats__table">
-              {Object.keys(data.player.overview)
-                .filter((stat) => {
-                  if (stat === "__typename" || stat === "seasonRewardLevel") {
-                    return false;
-                  }
-                  return true;
-                })
-                .map((stat) => {
-                  return (
-                    <tbody key={data.player.overview[stat].value}>
-                      <tr>
-                        <td>
-                          {data.player.overview[stat].displayName.toUpperCase()}
-                        </td>
-                        <td>{parseInt(data.player.overview[stat].value)}</td>
-                      </tr>
-                    </tbody>
-                  );
-                })}
-            </table>
-          </div>
+          <Overview playerId={playerId} />
           <Segments playerId={playerId} season={season} />
         </div>
       </div>

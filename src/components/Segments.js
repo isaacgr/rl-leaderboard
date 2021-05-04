@@ -36,7 +36,9 @@ const SEGMENTS_QUERY = gql`
 const validPlaylists = [
   "Ranked Duel 1v1",
   "Ranked Doubles 2v2",
-  "Ranked Standard 3v3"
+  "Ranked Standard 3v3",
+  "Hoops",
+  "Tournament Matches"
 ];
 
 const Segments = ({ playerId, season }) => {
