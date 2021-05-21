@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
+import TotalMatches from "./TotalMatches";
 
 const SEGMENTS_QUERY = gql`
   query SeasonQuery($id: String!, $season: Int!) {
@@ -46,6 +47,35 @@ const Segments = ({ playerId, season }) => {
     variables: { id: playerId, season: parseInt(season) },
     fetchPolicy: "no-cache"
   });
+  const [matches, setMatches] = useState(0);
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    setMatches(0);
+    data.segments
+      .filter((playlist) => {
+        const name = playlist.metadata.name;
+        if (validPlaylists.includes(name)) {
+          return true;
+        }
+        return false;
+      })
+      .forEach((playlist) => {
+        Object.keys(playlist.stats)
+          .filter((stat) => {
+            if (stat === "__typename") {
+              return false;
+            }
+            return true;
+          })
+          .forEach((stat) => {
+            if (stat === "matchesPlayed") {
+              setMatches((prevState) => prevState + playlist.stats[stat].value);
+            }
+          });
+      });
+  }, [data]);
   if (loading) return <h2 className="sub-title">Loading...</h2>;
   if (error) {
     console.log(error);
@@ -62,6 +92,7 @@ const Segments = ({ playerId, season }) => {
   }
   return (
     <>
+      <TotalMatches totalMatches={matches} />
       {data.segments
         .filter((playlist) => {
           const name = playlist.metadata.name;
