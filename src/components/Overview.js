@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Overview({ playerId, season, overview }) {
+export default function Overview({ overview }) {
   return (
     <>
       <div className="playlist-stats--overview">
