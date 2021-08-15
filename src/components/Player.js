@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import Segments from "./Segments";
 import Overview from "./Overview";
@@ -92,6 +92,15 @@ const Player = ({ playerId }) => {
     variables: { id: playerId },
     fetchPolicy: "no-cache"
   });
+  useEffect(() => {
+    if(!data){
+      return
+    }
+    if (!data.player.availableSegments.length){
+      return
+    }
+    setSeason(data.player.availableSegments.length)
+  }, [data])
   if (loading) return <h2 className="sub-title">Loading...</h2>;
   if (error) {
     console.log(error);
