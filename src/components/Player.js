@@ -144,7 +144,7 @@ const Player = ({ playerId }) => {
               </select>
             </div>
           </div>
-          <div className="player-header--content">
+          <div className="seperate-flex player-header--content">
             <button className="button">
               <Link to={{ pathname: `/${playerId}`, state: data.player }}>
                 RECENT MATCHES

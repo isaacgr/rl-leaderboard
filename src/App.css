@@ -49,6 +49,11 @@ a:focus {
   margin: 0 auto !important;
 }
 
+.seperate-flex {
+  justify-content: center;
+  width: 100%;
+}
+
 /*
 ===============================
 Title
@@ -133,14 +138,18 @@ Card
   display: flex;
 }
 
+.player-header--content img {
+  margin-right: 1rem;
+}
+
 .player-header__name {
-  padding-left: 1rem;
   color: #000000;
   font: 300 15px "Lato", "Open Sans", "Helvetica Nue", sans-serif;
   font-weight: bold;
   letter-spacing: 2px;
   text-transform: uppercase;
   margin: auto 0;
+  text-align: center;
 }
 
 .playlist-stats {
@@ -206,6 +215,7 @@ Button
   border-style: none;
   margin: 1rem;
   background-color: #ffffff;
+  transition: 0.5s ease;
 }
 
 .button a {
@@ -213,8 +223,7 @@ Button
 }
 
 .button:hover {
-  transition: 0.5s;
-  background-color: #f3f4f7;
+  background-color: #f0f0f09c;
 }
 
 /*
