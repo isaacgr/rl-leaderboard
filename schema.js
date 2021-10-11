@@ -51,7 +51,8 @@ const OverviewType = new GraphQLObjectType({
       type: PerformanceType
     },
     goalShotRatio: { type: PerformanceType },
-    seasonRewardLevel: { type: PerformanceType }
+    seasonRewardLevel: { type: PerformanceType },
+    matchesPlayed: { type: PerformanceType }
   })
 });
 
@@ -79,6 +80,22 @@ const SegmentsType = new GraphQLObjectType({
   })
 });
 
+const MatchesType = new GraphQLObjectType({
+  name: "Matches",
+  fields: () => ({
+    metadata: { type: MetaDataType },
+    stats: { type: OverviewType }
+  })
+});
+
+const SessionsType = new GraphQLObjectType({
+  name: "Session",
+  fields: () => ({
+    metadata: { type: MetaDataType },
+    matches: { type: GraphQLList(MatchesType) }
+  })
+});
+
 const AttributesType = new GraphQLObjectType({
   name: "Attributes",
   fields: () => ({
@@ -87,6 +104,8 @@ const AttributesType = new GraphQLObjectType({
 });
 
 const SegmentList = new GraphQLList(SegmentsType);
+
+const SessionsList = new GraphQLList(SessionsType);
 
 const StatsType = new GraphQLObjectType({
   name: "Stats",
@@ -124,10 +143,22 @@ const SeasonRewardsMetadata = new GraphQLObjectType({
   })
 });
 
+const DateType = new GraphQLObjectType({
+  name: "Date",
+  fields: () => ({
+    value: { type: GraphQLString }
+  })
+});
+
 const MetaDataType = new GraphQLObjectType({
   name: "Metadata",
   fields: () => ({
-    name: { type: GraphQLString }
+    name: { type: GraphQLString },
+    startDate: { type: DateType },
+    endDate: { type: DateType },
+    result: { type: GraphQLString },
+    playlist: { type: GraphQLString },
+    dateCollected: { type: GraphQLString }
   })
 });
 
@@ -161,6 +192,20 @@ const RootQuery = new GraphQLObjectType({
             { withCredentials: true }
           )
           .then((res) => res.data.data);
+      }
+    },
+    sessions: {
+      type: SessionsList,
+      args: {
+        id: { type: GraphQLString }
+      },
+      resolve(parent, args) {
+        return axios
+          .get(
+            `https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/${args.id}/sessions`,
+            { withCredentials: true }
+          )
+          .then((res) => res.data.data.items.slice(0, 10));
       }
     }
   }

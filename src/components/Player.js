@@ -2,6 +2,8 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import Segments from "./Segments";
 import Overview from "./Overview";
+import PlayerHeader from "./PlayerHeader";
+import { Link } from "react-router-dom";
 
 const PLAYER_QUERY = gql`
   query PlayerQuery($id: String!) {
@@ -93,14 +95,14 @@ const Player = ({ playerId }) => {
     fetchPolicy: "no-cache"
   });
   useEffect(() => {
-    if(!data){
-      return
+    if (!data) {
+      return;
     }
-    if (!data.player.availableSegments.length){
-      return
+    if (!data.player.availableSegments.length) {
+      return;
     }
-    setSeason(data.player.availableSegments.length)
-  }, [data])
+    setSeason(data.player.availableSegments.length);
+  }, [data]);
   if (loading) return <h2 className="sub-title">Loading...</h2>;
   if (error) {
     console.log(error);
@@ -119,26 +121,7 @@ const Player = ({ playerId }) => {
     <Fragment>
       <div className="card card-body mb-3">
         <div className="player-header card-header">
-          <div className="player-header--content">
-            <img
-              alt="img"
-              src={data.player.platformInfo.avatarUrl}
-              style={{ height: 100, width: 100, display: "block" }}
-            />
-            <h4 className="player-header__name">
-              {data.player.platformInfo.platformUserHandle}
-            </h4>
-          </div>
-          <div className="player-header--content">
-            <img
-              alt="img"
-              src={data.player.overview.seasonRewardLevel.metadata.iconUrl}
-              style={{ height: 100, width: 100, display: "block" }}
-            />
-            <h3 className="player-header__name">
-              {data.player.overview.seasonRewardLevel.metadata.rankName} Rewards
-            </h3>
-          </div>
+          <PlayerHeader data={data.player} />
           <div className="player-header--content">
             <div className="dropdown player-header__name">
               <h3 className="player-header__name">Season</h3>
@@ -160,6 +143,13 @@ const Player = ({ playerId }) => {
                 })}
               </select>
             </div>
+          </div>
+          <div className="player-header--content">
+            <button className="button">
+              <Link to={{ pathname: `/${playerId}`, state: data.player }}>
+                RECENT MATCHES
+              </Link>
+            </button>
           </div>
         </div>
         <div className="player-stats">
