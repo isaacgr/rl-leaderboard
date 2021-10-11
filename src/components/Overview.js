@@ -6,7 +6,7 @@ export default function Overview({ overview, header, classNames }) {
       {header ? (
         <tbody>
           <tr>
-            <th>{header}</th>
+            <th colspan="2">{header}</th>
           </tr>
         </tbody>
       ) : (
