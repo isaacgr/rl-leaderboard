@@ -20,10 +20,7 @@ const RootQuery = new GraphQLObjectType({
       },
       resolve(parent, args) {
         return axios
-          .get(
-            `https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/${args.id}`,
-            { withCredentials: true }
-          )
+          .get(`http://127.0.0.1:8080/player?id=${args.id}`)
           .then((res) => res.data.data);
       }
     },
@@ -38,8 +35,7 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args) {
         return axios
           .get(
-            `https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/${args.id}/segments/playlist?season=${args.season}`,
-            { withCredentials: true }
+            `http://127.0.0.1:8080/playlist?id=${args.id}&season=${args.season}`
           )
           .then((res) => res.data.data);
       }
@@ -52,10 +48,7 @@ const RootQuery = new GraphQLObjectType({
       },
       resolve(parent, args) {
         return axios
-          .get(
-            `https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/${args.id}/sessions`,
-            { withCredentials: true }
-          )
+          .get(`http://127.0.0.1:8080/sessions?id=${args.id}`)
           .then((res) => res.data.data.items.slice(0, 10));
       }
     }
