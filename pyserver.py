@@ -1,3 +1,4 @@
+#! /usr/bin/python3
 import subprocess
 import asyncio
 import aiohttp
@@ -6,6 +7,7 @@ import logging
 import signal
 import sys
 from aiohttp import web
+from aiohttp_cache import setup_cache, cache
 import aiohttp_cors
 import subprocess
 import json
@@ -16,9 +18,49 @@ FORMAT = "%(asctime)s:%(levelname)s:%(name)s:%(message)s"
 datefmt = "%Y-%m-%dT%H:%M:%S"
 log = logging.getLogger(__name__)
 
+def json_error(status_code: int, exception: Exception) -> web.Response:
+    """
+    Returns a Response from an exception.
+    Used for error middleware.
+    :param status_code:
+    :param exception:
+    :return:
+    """
+    return web.Response(
+        status=status_code,
+        body=json.dumps({
+            'error': exception.__class__.__name__,
+            'detail': str(exception)
+        }).encode('utf-8'),
+        content_type='application/json')
+
+
+async def error_middleware(app: web.Application, handler):
+    """
+    This middleware handles with exceptions received from views or previous middleware.
+    :param app:
+    :param handler:
+    :return:
+    """
+    async def middleware_handler(request):
+        try:
+            response = await handler(request)
+            if response.status == 404:
+                return json_error(response.status, Exception(response.message))
+            return response
+        except web.HTTPException as ex:
+            return json_error(ex.status, ex)
+        except Exception as e:
+            log.warning(
+                'Request {} has failed with exception: {}'.format(request, repr(e)))
+            return json_error(500, e)
+
+    return middleware_handler
+
 
 class RLHandler(object):
 
+    @cache(expires=300)
     def handle_get_player(self, request):
         id = request.rel_url.query.get('id')
         cmd = "curl -k -s https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/%s" % id
@@ -26,10 +68,10 @@ class RLHandler(object):
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
         if stderr:
-            print(stderr)
-            raise stderr
+            raise web.HTTPInternalServerError(reason=str(stderr))
         return web.json_response(json.loads(stdout), status=200)
 
+    @cache(expires=300)
     def handle_get_playlist(self, request):
         id = request.rel_url.query.get('id')
         season = request.rel_url.query.get('season')
@@ -39,10 +81,10 @@ class RLHandler(object):
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
         if stderr:
-            print(stderr)
-            raise stderr
+            raise web.HTTPInternalServerError(reason=str(stderr))
         return web.json_response(json.loads(stdout), status=200)
 
+    @cache(expires=300)
     def handle_get_sessions(self, request):
         id = request.rel_url.query.get('id')
         cmd = "curl -k -s https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/%s/sessions" % id
@@ -50,14 +92,15 @@ class RLHandler(object):
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
         if stderr:
-            print(stderr)
-            raise stderr
+            raise web.HTTPInternalServerError(reason=str(stderr))
         return web.json_response(json.loads(stdout), status=200)
 
 
+#app = web.Application(middlewares=[error_middleware])
 app = web.Application()
 
 handler = RLHandler()
+setup_cache(app)
 
 cors = aiohttp_cors.setup(app, defaults={
     "*": aiohttp_cors.ResourceOptions(
