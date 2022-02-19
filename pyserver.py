@@ -59,37 +59,38 @@ async def error_middleware(app: web.Application, handler):
 
 
 class RLHandler(object):
+    loop = asyncio.get_event_loop()
 
     @cache(expires=300)
-    def handle_get_player(self, request):
+    async def handle_get_player(self, request):
         id = request.rel_url.query.get('id')
         cmd = "curl -k -s https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/%s" % id
-        process = subprocess.Popen(
-            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = await self.loop.run_in_executor(None, lambda: subprocess.Popen(
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE))
         stdout, stderr = process.communicate()
         if stderr:
             raise web.HTTPInternalServerError(reason=str(stderr))
         return web.json_response(json.loads(stdout), status=200)
 
     @cache(expires=300)
-    def handle_get_playlist(self, request):
+    async def handle_get_playlist(self, request):
         id = request.rel_url.query.get('id')
         season = request.rel_url.query.get('season')
         cmd = "curl -k -s https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/%s/segments/playlist?season=%s" % (
             id, season)
-        process = subprocess.Popen(
-            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = await self.loop.run_in_executor(None, lambda: subprocess.Popen(
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE))
         stdout, stderr = process.communicate()
         if stderr:
             raise web.HTTPInternalServerError(reason=str(stderr))
         return web.json_response(json.loads(stdout), status=200)
 
     @cache(expires=300)
-    def handle_get_sessions(self, request):
+    async def handle_get_sessions(self, request):
         id = request.rel_url.query.get('id')
         cmd = "curl -k -s https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/%s/sessions" % id
-        process = subprocess.Popen(
-            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = await self.loop.run_in_executor(None, lambda: subprocess.Popen(
+            cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE))
         stdout, stderr = process.communicate()
         if stderr:
             raise web.HTTPInternalServerError(reason=str(stderr))
