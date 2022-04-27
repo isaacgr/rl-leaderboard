@@ -4,7 +4,7 @@ const yargs = require("yargs");
 const { hideBin } = require("yargs/helpers");
 const argv = yargs(hideBin(process.argv)).argv;
 
-const puppetWrite = async () => {
+const puppetGet = async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.setExtraHTTPHeaders({
@@ -32,4 +32,4 @@ const puppetWrite = async () => {
   await browser.close();
 };
 
-puppetWrite();
+puppetGet();
