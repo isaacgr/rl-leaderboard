@@ -68,7 +68,7 @@ const PLAYER_QUERY = gql`
 `;
 
 const Player = ({ playerId }) => {
-  const [season, setSeason] = useState(17);
+  const [season, setSeason] = useState(null);
   const { loading, error, data } = useQuery(PLAYER_QUERY, {
     variables: { id: playerId },
     fetchPolicy: "no-cache"
@@ -136,7 +136,7 @@ const Player = ({ playerId }) => {
             <h3 className="sub-title">Overview</h3>
             <Overview overview={data.player.overview} />
           </div>
-          <Segments playerId={playerId} season={season} />
+          {season && <Segments playerId={playerId} season={season} />}
         </div>
       </div>
     </Fragment>
