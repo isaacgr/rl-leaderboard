@@ -65,7 +65,7 @@ class RLHandler(object):
     @cache(expires=300)
     async def handle_get_player(self, request):
         id = request.rel_url.query.get('id')
-        cmd = "node puppetGet.js ---url=https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/%s" % id
+        cmd = "node server/puppetGet.js ---url=https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/%s" % id
         process = await self.loop.run_in_executor(None, lambda: subprocess.Popen(
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE))
         stdout, stderr = process.communicate()
@@ -77,7 +77,7 @@ class RLHandler(object):
     async def handle_get_playlist(self, request):
         id = request.rel_url.query.get('id')
         season = request.rel_url.query.get('season')
-        cmd = "node puppetGet.js --url=https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/%s/segments/playlist?season=%s" % (
+        cmd = "node server/puppetGet.js --url=https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/%s/segments/playlist?season=%s" % (
             id, season)
         process = await self.loop.run_in_executor(None, lambda: subprocess.Popen(
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE))
@@ -89,7 +89,7 @@ class RLHandler(object):
     @cache(expires=300)
     async def handle_get_sessions(self, request):
         id = request.rel_url.query.get('id')
-        cmd = "node puppetGet.js --url=https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/%s/sessions" % id
+        cmd = "node server/puppetGet.js --url=https://api.tracker.gg/api/v2/rocket-league/standard/profile/steam/%s/sessions" % id
         process = await self.loop.run_in_executor(None, lambda: subprocess.Popen(
             cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE))
         stdout, stderr = process.communicate()
@@ -154,8 +154,6 @@ def parse_commandline():
         description='Make queries to jira/stash graphql connector',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     serverGroup = parser.add_argument_group('HTTP Server')
-    serverGroup.add_argument(
-        '--http-server', action='store_true', help='Start the http server, otherwise will just fetch repos')
     serverGroup.add_argument('--host', default='127.0.0.1',
                              help='IP address to host http server')
     serverGroup.add_argument('--port', type=int, default=8080,
@@ -186,7 +184,7 @@ def main():
     # TODO: add retries etc.
     # should probably handle each of these seperately beyond logging
     try:
-        loop.run_until_complete(start_server(app))
+        loop.run_until_complete(start_server(app, host=options.host, port=options.port))
     except (aiohttp.client_exceptions.ClientConnectorError, ConnectionResetError) as e:
         log.error(e)
     except aiohttp.client_exceptions.ServerDisconnectedError as e:
